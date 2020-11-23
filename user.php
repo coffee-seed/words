@@ -19,6 +19,11 @@
 		id ползователя в экземпляре класса
 		*/
 		public $id;
+		//Public static variables
+		/*
+		Переменная со статусом выполнения функции		
+		*/
+		public static $status;
 		//construct, destruct
 		function __construct($uid=false){
 		/*
@@ -115,6 +120,40 @@
         		return false;
       	}
    	}
+   	public static function reg($email,$password){
+   		/*
+   		Функция для регистрации пользователя
+   		на вход принимает email и пароль
+   		создаёт запись в базе данных
+   		возвращает id пользователя, если не зарегестрировало, вовращает 0
+   		*/
+   		if(check_email($email)){ 
+				$email=$this->mysqli->real_escape_string($email);			
+				$this->mysqli->query("
+					INSERT INTO `users` SET `email`='$email',`password`='".self::pass_hash($password)."';
+				");
+				self::status=true;
+				return $this->mysqli->insert_id;
+			}
+			else{
+				self::status=false;
+				return false;
+			}
+  		}
+  		public function check_email($email){
+  			/*
+  			Функция для проверки существования email в бд
+  			Принимает на вход email
+  			возвращает true, если email свободен и false если занят
+  			*/ 
+			$email=$this->mysqli->real_escape_string($email);			
+			$query=$this->mysqli->query("
+				SELECT `id` FROM `users` WHERE `email`='$email';
+			");
+			$ret=!$query->num_rows;
+			$query->close();
+			return $ret;
+  		}
    	//private functions
    	private function gen64(){
   			/*
@@ -180,38 +219,6 @@
 			return hash("sha256", $text."salt");
   		}
   		//Public static function
-   	public static function reg($email,$password){
-   		/*
-   		Статичная функция для регистрации пользователя
-   		на вход принимает email и пароль
-   		создаёт запись в базе данных
-   		возвращает id пользователя, если не зарегестрировало, вовращает 0
-   		*/
-			$connect=self::my_connect(); 
-			$email=$connect->real_escape_string($email);			
-			$connect->query("
-				INSERT INTO `users` SET `email`='$email',`password`='".self::pass_hash($password)."';
-			");
-			$ret=$connect->insert_id;
-			$connect->close();
-			return $ret;
-  		}
-  		public static function check_email($email){
-  			/*
-  			Статическая функция для проверки существования email
-  			Принимает на вход email
-  			возвращает true, если email свободен и false если занят
-  			*/
-			$connect=self::my_connect(); 
-			$email=$connect->real_escape_string($email);			
-			$query=$connect->query("
-				SELECT `id` FROM `users` WHERE `email`='$email';
-			");
-			$ret=!$query->num_rows;
-			$query->close();
-			$connect->close();
-			return $ret;
-  		}
   		public static function check_cookie(){
 			/*
   			Статическая функция для проверки валидности cookie

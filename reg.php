@@ -34,28 +34,29 @@
 	}
 	else{
 		if(isset($_POST['email']) AND isset($_POST['password'])){
-			if(User::check_email($_POST['email'])){
-				if(User::reg($_POST['email'],$_POST['password'])){
-					?>
+			$user=new User;
+			if($user->reg($_POST['email'],$_POST['password'])){
+				?>
+					<script>
+						window.location="/auth.php";
+					</script>					
+				<?php
+			}
+			else{
+				if($user->status!==false){
+					?>				
 						<script>
-							window.location="/auth.php";
-						</script>					
+							alert("Ошибка регистрации");
+						</script>
 					<?php
 				}
 				else{
 					?>				
 						<script>
-							alert("Ошибка регистрации");
+							alert("Данный email уже занят!");
 						</script>
 					<?php	
-				}
-			}
-			else{
-				?>				
-					<script>
-						alert("Данный email уже занят!");
-					</script>
-				<?php	
+				}	
 			}
 		}
 	}
