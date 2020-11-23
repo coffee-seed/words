@@ -120,23 +120,23 @@
         		return false;
       	}
    	}
-   	public static function reg($email,$password){
+   	public function reg($email,$password){
    		/*
    		Функция для регистрации пользователя
    		на вход принимает email и пароль
    		создаёт запись в базе данных
    		возвращает id пользователя, если не зарегестрировало, вовращает 0
    		*/
-   		if(check_email($email)){ 
+   		if($this->check_email($email)){ 
 				$email=$this->mysqli->real_escape_string($email);			
 				$this->mysqli->query("
 					INSERT INTO `users` SET `email`='$email',`password`='".self::pass_hash($password)."';
 				");
-				self::status=true;
+				self::$status=true;
 				return $this->mysqli->insert_id;
 			}
 			else{
-				self::status=false;
+				self::$status=false;
 				return false;
 			}
   		}
