@@ -174,13 +174,13 @@
 			return hash("sha256", random_bytes(64));
   		}
    	private function is_audio($file_name){
-   		if(in_array(pathinfo($file_name)['extension'],self::$audio_formats)){
+   		if(in_array(pathinfo($file_name)['extension'],self::$audio_formats) AND (strpos(pathinfo($file_name)['filename'], '.')===false)){
 				return true;
 			}
 			return false;
    	}
    	private function is_image($file_name){
-			if(in_array(pathinfo($file_name)['extension'],self::$image_formats)){
+			if(in_array(pathinfo($file_name)['extension'],self::$image_formats) AND (strpos(pathinfo($file_name)['filename'], '.')===false)){
 				return true;
 			}
 			return false;
