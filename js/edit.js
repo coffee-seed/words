@@ -1,4 +1,3 @@
-console.log(words);
 words_area.innerHTML="";
 function ajax_delete_request(id){
 	var xhr = new XMLHttpRequest();
