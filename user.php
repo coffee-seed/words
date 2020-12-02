@@ -9,6 +9,18 @@
 			'user'=> 'words_user',
 			'password'=>'pass123',
 			'db'=>'words_db');
+		/*
+			Список форматов изображений, допустимых к загрузке
+		*/
+		private static $image_formats = array(
+			"bmp","dib","rle","jpg","jfif","jpe","jpeg","jp2","j2k","jpf","jpm","jpg2","j2c","jpc","jpx","mj2","gif","tif","tiff","ico","jxr","hdp","wdp","png","webp","svg"
+		);
+		/*
+			Список форматов аудио, допустимых к загрузке
+		*/
+		private static $audio_formats = array(
+			"mp4","m4a","wma","aac","mpc",".mp+","mpp","mp", "ape","mp1","m1a","ogg","oga","sb0","mp2","mp3", "wav","ac3","amr","flac","ics","iff","m4a",",4b","mpa","msv","MOV","3gp","mkv"		
+		);
 		//private variables
 		/*
 		Объект mysqli с подключением к базе данных для всего класса
@@ -162,16 +174,16 @@
 			return hash("sha256", random_bytes(64));
   		}
    	private function is_audio($file_name){
-   		if(pathinfo($file_name)['extension']){
-				
+   		if(in_array(pathinfo($file_name)['extension'],self::$audio_formats)){
+				return true;
 			}
-			return true;
+			return false;
    	}
    	private function is_image($file_name){
-			if(pathinfo($file_name)['extension']){
-				
+			if(in_array(pathinfo($file_name)['extension'],self::$image_formats)){
+				return true;
 			}
-			return true;
+			return false;
    	}
    	private function set_cookie(){
 			/*
